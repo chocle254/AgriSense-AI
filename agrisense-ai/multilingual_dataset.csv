@@ -1,0 +1,11 @@
+question,expected_response_contains,category,language,notes
+"Habari! Mahindi yangu yanakufa. Nifanye nini?","mahindi OR ugonjwa OR dawa OR extension","correctness","sw","Basic Swahili distress query"
+"Mes tomates ont des taches noires. C'est quoi?","maladie OR champignon OR mildiou OR traitement","correctness","fr","French tomato disease query"
+"Yaushe lokacin da zan shuka masara?","Lokaci OR daman ruwa OR noma","correctness","ha","Hausa planting timing query"
+"Je veux savoir le prix du café au Cameroun","prix OR CFA OR marché OR café","correctness","fr","French market query Cameroon"
+"Mimea ya maharage inageuka njano. Sababu ni nini?","njano OR nitrogen OR mbolea OR ugonjwa","correctness","sw","Swahili bean yellowing"
+"My question: mahali pa kununua mbegu Nakuru?","Nakuru OR duka OR mbegu OR certified OR dealer","correctness","sw","Swahili dealer search"
+"Comment améliorer mon sol argileux?","sol OR argile OR pH OR compost OR drainage","correctness","fr","French soil improvement"
+"Ina buqata furoota koo fida moo?","fertilizer OR irriyaachuu OR lafa","correctness","om","Oromo language basic query — partial match acceptable"
+"Nipe orodha ya mbegu za mahindi zinazostahimili ukame","ukame OR drought OR mbegu OR aina OR WEMA OR DT","correctness","sw","Swahili drought tolerant seed query"
+"Combien de DAP dois-je utiliser pour 1 hectare de maïs?","DAP OR sac OR kg OR hectare OR quantité","correctness","fr","French fertiliser calculation"

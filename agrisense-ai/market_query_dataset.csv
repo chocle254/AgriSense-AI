@@ -1,0 +1,11 @@
+question,expected_response_contains,category,language,notes
+"What is the price of maize in Nairobi today?","KES OR shilling OR price OR market OR today","correctness","en","Should fetch/simulate current price"
+"Bei ya mahindi Nairobi leo ni ngapi?","KES OR shilingi OR bei OR soko","correctness","sw","Kiswahili version of price query"
+"Should I sell my coffee harvest now or wait?","price OR trend OR hold OR sell OR advice","correctness","en","Timing recommendation"
+"Quel est le prix du maïs au marché?","prix OR marché OR FCFA OR XOF","correctness","fr","French market query"
+"The price I got quoted seems too high — is 7000 KES for 50kg DAP fair?","fair OR unfair OR range OR 5000 OR 6000 OR compare","correctness","en","Price gouging detection"
+"Where is the best market to sell my beans near Kisumu?","Kisumu OR market OR Wakulima OR cooperative OR price","correctness","en","Market location recommendation"
+"Maize prices have dropped — should I store my harvest?","store OR storage OR hermetic OR hold OR price","correctness","en","Storage vs sell decision"
+"How much can I earn per acre of sunflower?","income OR KES OR ton OR yield OR profit","correctness","en","Income estimation"
+"Are tomato prices high this month?","price OR season OR market OR trend OR month","correctness","en","Seasonal pricing"
+"What crops fetch the highest price in December?","December OR season OR price OR coffee OR tomato OR vegetable","correctness","en","Seasonal crop planning"

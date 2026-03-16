@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriSense AI — Live Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --earth: #2D4A22;
+    --leaf: #4A7C35;
+    --sprout: #7AB648;
+    --sun: #E8A735;
+    --soil: #8B5E3C;
+    --cream: #F9F5EE;
+    --cloud: #FFFFFF;
+    --mist: #EAF2E3;
+    --fog: #C8DEB8;
+    --shadow: rgba(45,74,34,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    color: var(--earth);
+  }
+
+  /* ── LAYOUT ── */
+  .shell {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    height: 100vh;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    background: var(--earth);
+    color: var(--cream);
+    display: flex;
+    flex-direction: column;
+    padding: 28px 24px;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 1px; height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--sprout), transparent);
+    opacity: 0.4;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .logo-icon {
+    width: 48px; height: 48px;
+    background: var(--sprout);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(122,182,72,0.35);
+  }
+
+  .logo-text { line-height: 1.2; }
+  .logo-text h1 { font-family: 'DM Serif Display', serif; font-size: 20px; font-weight: 400; color: var(--cream); }
+  .logo-text p { font-size: 11px; color: var(--fog); letter-spacing: 0.04em; margin-top: 2px; }
+
+  .section-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--fog);
+    margin-bottom: 12px; padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .agent-list { margin-bottom: 28px; }
+  .agent-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 12px; border-radius: 10px;
+    margin-bottom: 4px; cursor: pointer;
+    transition: background 0.15s;
+    font-size: 13px;
+  }
+  .agent-item:hover { background: rgba(255,255,255,0.07); }
+  .agent-item.active { background: rgba(122,182,72,0.2); }
+  .agent-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.12);
+  }
+  .agent-name { font-weight: 500; color: var(--cream); }
+  .agent-tag { margin-left: auto; font-size: 10px; color: var(--fog); }
+
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 28px; }
+  .stat-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 12px;
+  }
+  .stat-card .val { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--sprout); }
+  .stat-card .key { font-size: 10px; color: var(--fog); margin-top: 2px; }
+
+  .channel-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+  .pill {
+    padding: 5px 10px; border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.15);
+    font-size: 11px; color: var(--fog);
+  }
+  .pill.active { background: var(--sprout); color: var(--earth); border-color: var(--sprout); font-weight: 600; }
+
+  .sms-notice {
+    margin-top: auto;
+    background: rgba(122,182,72,0.12);
+    border: 1px solid rgba(122,182,72,0.25);
+    border-radius: 12px; padding: 14px;
+  }
+  .sms-notice h4 { font-size: 12px; font-weight: 600; color: var(--sprout); margin-bottom: 6px; }
+  .sms-notice p { font-size: 11px; color: var(--fog); line-height: 1.5; }
+
+  /* ── MAIN ── */
+  .main { display: flex; flex-direction: column; overflow: hidden; }
+
+  .topbar {
+    background: var(--cloud);
+    border-bottom: 1px solid rgba(45,74,34,0.1);
+    padding: 14px 24px;
+    display: flex; align-items: center; gap: 16px;
+    flex-shrink: 0;
+  }
+
+  .topbar-title { font-family: 'DM Serif Display', serif; font-size: 17px; font-weight: 400; }
+  .topbar-sub { font-size: 12px; color: #7A8F6E; margin-left: 2px; }
+
+  .photo-btn {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 7px;
+    padding: 8px 16px; border-radius: 9px;
+    border: 1.5px solid var(--fog);
+    background: transparent; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 500;
+    color: var(--earth); transition: all 0.15s;
+  }
+  .photo-btn:hover { background: var(--mist); border-color: var(--sprout); }
+
+  .lang-select {
+    padding: 7px 10px; border-radius: 8px;
+    border: 1.5px solid var(--fog);
+    background: transparent; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; color: var(--earth);
+  }
+
+  /* ── MESSAGES ── */
+  .messages {
+    flex: 1; overflow-y: auto;
+    padding: 28px 28px 16px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+
+  .msg { display: flex; gap: 12px; align-items: flex-start; }
+  .msg.user { flex-direction: row-reverse; }
+
+  .avatar {
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+    background: var(--leaf);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .bubble {
+    max-width: 70%;
+    padding: 13px 16px;
+    border-radius: 4px 16px 16px 16px;
+    font-size: 14px; line-height: 1.65;
+    white-space: pre-wrap;
+  }
+  .msg.user .bubble {
+    border-radius: 16px 4px 16px 16px;
+    background: var(--earth); color: var(--cream);
+  }
+  .msg.assistant .bubble {
+    background: var(--cloud); color: var(--earth);
+    border: 1px solid rgba(45,74,34,0.1);
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  .bubble-meta {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 6px; padding-left: 2px;
+  }
+
+  .agent-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 9px; border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+    border: 1px solid currentColor;
+  }
+
+  /* ── TYPING INDICATOR ── */
+  .typing { display: flex; gap: 5px; padding: 14px 16px; align-items: center; }
+  .typing span {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--fog); display: block;
+    animation: bounce 1.1s ease-in-out infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.18s; }
+  .typing span:nth-child(3) { animation-delay: 0.36s; }
+
+  @keyframes bounce {
+    0%,80%,100% { transform: translateY(0); opacity: 0.45; }
+    40% { transform: translateY(-7px); opacity: 1; }
+  }
+
+  /* ── QUICK PROMPTS ── */
+  .quickprompts {
+    padding: 0 28px 12px;
+    display: flex; flex-wrap: wrap; gap: 7px;
+  }
+
+  .qp {
+    padding: 7px 13px; border-radius: 22px;
+    background: var(--mist);
+    border: 1.5px solid var(--fog);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; color: var(--earth);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .qp:hover { background: var(--fog); border-color: var(--sprout); }
+
+  /* ── INPUT ── */
+  .inputbar {
+    background: var(--cloud);
+    border-top: 1px solid rgba(45,74,34,0.1);
+    padding: 14px 24px;
+    display: flex; gap: 10px; align-items: flex-end;
+    flex-shrink: 0;
+  }
+
+  .inputbar textarea {
+    flex: 1; padding: 11px 14px; border-radius: 12px;
+    border: 1.5px solid var(--fog);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--earth);
+    resize: none; outline: none;
+    background: var(--cream); max-height: 120px;
+    transition: border-color 0.15s;
+    line-height: 1.5;
+  }
+  .inputbar textarea:focus { border-color: var(--sprout); }
+  .inputbar textarea::placeholder { color: #A0B89A; }
+
+  .send-btn {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--earth); color: var(--cream);
+    border: none; cursor: pointer;
+    font-size: 18px; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .send-btn:hover:not(:disabled) { background: var(--leaf); transform: scale(1.04); }
+  .send-btn:disabled { background: var(--fog); cursor: not-allowed; transform: none; }
+
+  /* ── PHOTO MODAL ── */
+  .modal-backdrop {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    align-items: center; justify-content: center;
+    z-index: 100;
+  }
+  .modal-backdrop.open { display: flex; }
+
+  .modal {
+    background: var(--cloud); border-radius: 18px;
+    padding: 26px; width: min(440px, 92vw);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+  }
+
+  .modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px;
+  }
+  .modal-header h2 { font-family: 'DM Serif Display', serif; font-size: 20px; font-weight: 400; }
+  .modal-close {
+    background: none; border: none; font-size: 22px; cursor: pointer; color: #888;
+    width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+  }
+  .modal-close:hover { background: var(--mist); }
+
+  .dropzone {
+    border: 2px dashed var(--fog); border-radius: 12px;
+    padding: 28px; text-align: center; cursor: pointer;
+    margin-bottom: 14px; transition: all 0.15s;
+  }
+  .dropzone:hover { border-color: var(--sprout); background: var(--mist); }
+  .dropzone .dz-icon { font-size: 36px; margin-bottom: 8px; }
+  .dropzone p { font-size: 13px; color: #7A8F6E; }
+
+  .modal input[type=text], .modal textarea {
+    width: 100%; padding: 10px 13px;
+    border: 1.5px solid var(--fog); border-radius: 9px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px;
+    color: var(--earth); background: var(--cream);
+    outline: none; margin-bottom: 10px;
+    transition: border-color 0.15s;
+  }
+  .modal input:focus, .modal textarea:focus { border-color: var(--sprout); }
+
+  .modal-submit {
+    width: 100%; padding: 12px;
+    background: var(--earth); color: var(--cream);
+    border: none; border-radius: 11px; cursor: pointer;
+    font-family: 'DM Serif Display', serif; font-size: 16px;
+    transition: all 0.15s;
+  }
+  .modal-submit:hover:not(:disabled) { background: var(--leaf); }
+  .modal-submit:disabled { background: var(--fog); cursor: not-allowed; }
+
+  .preview-img {
+    max-height: 160px; border-radius: 10px;
+    object-fit: cover; margin-bottom: 10px; width: 100%;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .msg { animation: slideUp 0.25s ease-out; }
+
+  /* ── SCROLLBAR ── */
+  .messages::-webkit-scrollbar { width: 4px; }
+  .messages::-webkit-scrollbar-thumb { background: var(--fog); border-radius: 4px; }
+
+  @media (max-width: 768px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">🌾</div>
+      <div class="logo-text">
+        <h1>AgriSense AI</h1>
+        <p>POWERED BY GRADIENT™ AI</p>
+      </div>
+    </div>
+
+    <p class="section-label">Active Agents</p>
+    <div class="agent-list" id="agentList">
+      <div class="agent-item" data-agent="orchestrator">
+        <div class="agent-dot" style="background:#E8A735"></div>
+        <span class="agent-name">Mama Shamba</span>
+        <span class="agent-tag">Orchestrator</span>
+      </div>
+      <div class="agent-item" data-agent="crop-doctor">
+        <div class="agent-dot" style="background:#7AB648"></div>
+        <span class="agent-name">Crop Doctor</span>
+        <span class="agent-tag">RAG + Vision</span>
+      </div>
+      <div class="agent-item" data-agent="weather">
+        <div class="agent-dot" style="background:#64B5F6"></div>
+        <span class="agent-name">Weather</span>
+        <span class="agent-tag">Function calls</span>
+      </div>
+      <div class="agent-item" data-agent="market">
+        <div class="agent-dot" style="background:#FFB74D"></div>
+        <span class="agent-name">Market</span>
+        <span class="agent-tag">Live prices</span>
+      </div>
+      <div class="agent-item" data-agent="agronomy">
+        <div class="agent-dot" style="background:#BA68C8"></div>
+        <span class="agent-name">Agronomy</span>
+        <span class="agent-tag">RAG + Calc</span>
+      </div>
+      <div class="agent-item" data-agent="input-finder">
+        <div class="agent-dot" style="background:#4DB6AC"></div>
+        <span class="agent-name">Input Finder</span>
+        <span class="agent-tag">Geo-search</span>
+      </div>
+    </div>
+
+    <p class="section-label">Platform Stats</p>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="val">500M+</div><div class="key">Target farmers</div></div>
+      <div class="stat-card"><div class="val">120+</div><div class="key">Crops covered</div></div>
+      <div class="stat-card"><div class="val">2,000+</div><div class="key">Diseases in DB</div></div>
+      <div class="stat-card"><div class="val">4</div><div class="key">Languages</div></div>
+    </div>
+
+    <p class="section-label">Channels</p>
+    <div class="channel-pills">
+      <span class="pill active">Web</span>
+      <span class="pill">SMS</span>
+      <span class="pill">WhatsApp</span>
+      <span class="pill">REST API</span>
+    </div>
+
+    <div class="sms-notice">
+      <h4>📱 No smartphone? No problem.</h4>
+      <p>SMS *384# from any basic phone — no data plan needed. Available in 35 African countries via Africa's Talking.</p>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Chat with Mama Shamba</div>
+        <div class="topbar-sub">Multi-agent AI · DigitalOcean Gradient™ AI Platform</div>
+      </div>
+      <select class="lang-select" id="langSelect">
+        <option value="auto">🌍 Auto-detect language</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="sw">🇰🇪 Kiswahili</option>
+        <option value="fr">🇫🇷 Français</option>
+        <option value="ha">🇳🇬 Hausa</option>
+      </select>
+      <button class="photo-btn" onclick="openPhotoModal()">
+        📸 Diagnose Photo
+      </button>
+    </div>
+
+    <div class="messages" id="messages">
+      <!-- Welcome message injected by JS -->
+    </div>
+
+    <div class="quickprompts" id="quickprompts">
+      <button class="qp" onclick="sendPrompt(this.textContent)">🌽 My maize leaves are yellow from the tips</button>
+      <button class="qp" onclick="sendPrompt(this.textContent)">☁️ When should I plant beans this season?</button>
+      <button class="qp" onclick="sendPrompt(this.textContent)">💰 What is the price of maize in Nairobi?</button>
+      <button class="qp" onclick="sendPrompt(this.textContent)">🌱 How much DAP for 2 acres of maize?</button>
+      <button class="qp" onclick="sendPrompt(this.textContent)">🏪 Find certified seed dealer near Eldoret</button>
+      <button class="qp" onclick="sendPrompt('Mahindi yangu yana madoa ya kahawia. Ni ugonjwa gani?')">🇰🇪 Swahili: Mahindi yana madoa...</button>
+    </div>
+
+    <div class="inputbar">
+      <textarea
+        id="input"
+        rows="1"
+        placeholder="Ask Mama Shamba anything about your farm..."
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"
+      ></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>↑</button>
+    </div>
+  </main>
+</div>
+
+<!-- PHOTO MODAL -->
+<div class="modal-backdrop" id="photoModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>📸 Diagnose Crop Photo</h2>
+      <button class="modal-close" onclick="closePhotoModal()">✕</button>
+    </div>
+    <div class="dropzone" onclick="document.getElementById('photoInput').click()">
+      <div id="dzContent">
+        <div class="dz-icon">📷</div>
+        <p>Click to upload a photo of your crop</p>
+      </div>
+      <img id="photoPreview" class="preview-img" style="display:none" />
+    </div>
+    <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoSelect(event)">
+    <input type="text" id="cropName" placeholder="Crop name (e.g. maize, beans, tomatoes)">
+    <textarea id="photoSymptoms" rows="2" placeholder="Describe what you see (optional)..."></textarea>
+    <button class="modal-submit" id="diagnoseBtn" onclick="submitDiagnosis()" disabled>
+      🔬 Diagnose Disease
+    </button>
+  </div>
+</div>
+
+<script>
+// ── STATE ────────────────────────────────────────────────────────────────
+const AGENT_CONFIG = {
+  orchestrator: { label: 'Mama Shamba', color: '#B8860B', bg: '#FFF8E7', icon: '🌾' },
+  'crop-doctor': { label: 'Crop Doctor', color: '#3B7A1A', bg: '#EAF7E0', icon: '🔬' },
+  weather: { label: 'Weather Agent', color: '#1565C0', bg: '#E8F1FC', icon: '🌤' },
+  market: { label: 'Market Agent', color: '#BF6900', bg: '#FFF3E0', icon: '📊' },
+  agronomy: { label: 'Agronomy Agent', color: '#6A1B9A', bg: '#F6EEF9', icon: '🌱' },
+  'input-finder': { label: 'Input Finder', color: '#00695C', bg: '#E0F2F1', icon: '🏪' },
+};
+
+let history = [];
+let loading = false;
+let photoFile = null;
+
+const SYSTEM_PROMPT = `You are Mama Shamba, a warm and expert AI farming companion serving smallholder farmers in Africa and the developing world. Your name means "Mother of the Farm" in Kiswahili.
+
+You have a team of specialist AI agents you can route to — represent them by labeling your response. At the START of every response, output a routing label on the first line in this exact format:
+[AGENT: crop-doctor] or [AGENT: weather] or [AGENT: market] or [AGENT: agronomy] or [AGENT: input-finder] or [AGENT: orchestrator]
+
+Route based on query type:
+- Disease/pest/sick plant/yellow leaves/spots → [AGENT: crop-doctor]
+- Weather/planting timing/rainfall/forecast → [AGENT: weather]
+- Prices/sell/market/income → [AGENT: market]
+- Fertiliser/soil/seeds/planting guide → [AGENT: agronomy]
+- Find dealer/buy inputs/agro-dealer/where to buy → [AGENT: input-finder]
+- General greetings/multi-topic/unclear → [AGENT: orchestrator]
+
+After the routing label, give your response. Always respond in the SAME LANGUAGE as the user's query. If they write Kiswahili, respond in Kiswahili. If French, respond in French. English is fallback.
+
+Tone: warm, practical, encouraging. Give specific actionable advice. Keep responses focused — 3–5 short paragraphs maximum. Use simple language a farmer would understand, not jargon.
+
+For disease diagnoses, always include:
+• Likely cause
+• Confidence level (High/Medium/Low)
+• Immediate action
+• Treatment steps
+• Prevention next season
+
+For fertiliser questions, give specific quantities (bags, kg) for the field size mentioned. Always prefer locally available products.
+
+Never make up market prices. Say you're connecting to live market data and give realistic sample prices for East Africa (KES for Kenya, TZS for Tanzania, UGX for Uganda).
+
+End responses with a warm, encouraging closing line.`;
+
+// ── INIT ─────────────────────────────────────────────────────────────────
+window.onload = () => {
+  addMessage('assistant', `Habari! I am Mama Shamba — your AI farming companion. 🌾
+
+I can help you with:
+• 🔬 Crop disease diagnosis (text description or photo)
+• 🌤 Weather & planting calendar advice
+• 📊 Market prices and best time to sell
+• 🌱 Fertiliser quantities and seed variety selection
+• 🏪 Finding certified agro-dealers near you
+
+I speak English, Kiswahili, Français, and Hausa. Just ask in your language.
+
+What can I help you grow today?`, 'orchestrator');
+
+  document.getElementById('input').addEventListener('input', () => {
+    const val = document.getElementById('input').value.trim();
+    document.getElementById('sendBtn').disabled = !val || loading;
+  });
+};
+
+// ── MESSAGING ────────────────────────────────────────────────────────────
+function addMessage(role, content, agent = null) {
+  const container = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.textContent = role === 'user' ? '👨‍🌾' : '🌾';
+
+  const bubbleWrap = document.createElement('div');
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.textContent = content;
+
+  bubbleWrap.appendChild(bubble);
+
+  if (role === 'assistant' && agent) {
+    const meta = document.createElement('div');
+    meta.className = 'bubble-meta';
+    const cfg = AGENT_CONFIG[agent] || AGENT_CONFIG.orchestrator;
+    const badge = document.createElement('span');
+    badge.className = 'agent-badge';
+    badge.style.color = cfg.color;
+    badge.style.background = cfg.bg;
+    badge.style.borderColor = cfg.color + '40';
+    badge.innerHTML = `${cfg.icon} ${cfg.label}`;
+    meta.appendChild(badge);
+    bubbleWrap.appendChild(meta);
+
+    // Highlight active agent in sidebar
+    document.querySelectorAll('.agent-item').forEach(el => el.classList.remove('active'));
+    const activeEl = document.querySelector(`[data-agent="${agent}"]`);
+    if (activeEl) activeEl.classList.add('active');
+  }
+
+  div.appendChild(avatar);
+  div.appendChild(bubbleWrap);
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function addTyping() {
+  const container = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg assistant';
+  div.id = 'typing-indicator';
+  div.innerHTML = `
+    <div class="avatar">🌾</div>
+    <div class="bubble typing">
+      <span></span><span></span><span></span>
+    </div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typing-indicator');
+  if (el) el.remove();
+}
+
+function hideQuickPrompts() {
+  const qp = document.getElementById('quickprompts');
+  if (qp && history.length > 0) qp.style.display = 'none';
+}
+
+// ── API CALL ─────────────────────────────────────────────────────────────
+async function callAPI(userMessage) {
+  history.push({ role: 'user', content: userMessage });
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1000,
+      system: SYSTEM_PROMPT,
+      messages: history,
+    }),
+  });
+
+  const data = await response.json();
+  const raw = data.content?.[0]?.text || 'I had trouble processing that. Please try again.';
+
+  // Parse out the routing label
+  const match = raw.match(/^\[AGENT:\s*([\w-]+)\]/);
+  const agent = match ? match[1] : 'orchestrator';
+  const cleaned = raw.replace(/^\[AGENT:\s*[\w-]+\]\s*\n?/, '').trim();
+
+  history.push({ role: 'assistant', content: raw });
+
+  return { text: cleaned, agent };
+}
+
+// ── SEND FLOW ─────────────────────────────────────────────────────────────
+async function sendMessage() {
+  const input = document.getElementById('input');
+  const text = input.value.trim();
+  if (!text || loading) return;
+  await sendPrompt(text);
+  input.value = '';
+  input.style.height = 'auto';
+}
+
+async function sendPrompt(text) {
+  if (loading) return;
+  hideQuickPrompts();
+  loading = true;
+  document.getElementById('sendBtn').disabled = true;
+
+  addMessage('user', text);
+  addTyping();
+
+  try {
+    const { text: response, agent } = await callAPI(text);
+    removeTyping();
+    addMessage('assistant', response, agent);
+  } catch (err) {
+    removeTyping();
+    addMessage('assistant',
+      'I\'m having trouble connecting right now. Please try again in a moment. You can also reach us via SMS for offline access.',
+      'orchestrator'
+    );
+  }
+
+  loading = false;
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('input').focus();
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  document.getElementById('sendBtn').disabled = !el.value.trim() || loading;
+}
+
+// ── PHOTO MODAL ───────────────────────────────────────────────────────────
+function openPhotoModal() {
+  document.getElementById('photoModal').classList.add('open');
+}
+
+function closePhotoModal() {
+  document.getElementById('photoModal').classList.remove('open');
+  photoFile = null;
+  document.getElementById('photoPreview').style.display = 'none';
+  document.getElementById('dzContent').style.display = 'block';
+  document.getElementById('diagnoseBtn').disabled = true;
+  document.getElementById('cropName').value = '';
+  document.getElementById('photoSymptoms').value = '';
+  document.getElementById('photoInput').value = '';
+}
+
+function handlePhotoSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  photoFile = file;
+  const preview = document.getElementById('photoPreview');
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = 'block';
+  document.getElementById('dzContent').style.display = 'none';
+  document.getElementById('diagnoseBtn').disabled = false;
+}
+
+async function submitDiagnosis() {
+  const crop = document.getElementById('cropName').value || 'unknown crop';
+  const symptoms = document.getElementById('photoSymptoms').value || 'Please diagnose the disease or pest issue visible in this photo.';
+
+  closePhotoModal();
+  hideQuickPrompts();
+
+  const userMsg = `[Photo uploaded] I'm growing ${crop}. ${symptoms}`;
+  addMessage('user', `📸 Crop photo uploaded — ${crop}\n${symptoms}`);
+
+  loading = true;
+  document.getElementById('sendBtn').disabled = true;
+  addTyping();
+
+  const diagPrompt = `The farmer has uploaded a photo of their ${crop} plant showing these symptoms: ${symptoms}
+
+Please provide a detailed crop disease/pest diagnosis as if you have analyzed the photo. Include:
+- Most likely diagnosis with confidence level
+- Symptoms that led to this diagnosis
+- Immediate treatment steps
+- Prevention for next season
+- Whether this needs urgent extension officer notification`;
+
+  try {
+    const { text, agent } = await callAPI(diagPrompt);
+    history[history.length - 2].content = userMsg;
+    removeTyping();
+    addMessage('assistant', text, agent || 'crop-doctor');
+  } catch {
+    removeTyping();
+    addMessage('assistant', 'Unable to process the photo right now. Please describe the symptoms in text and I will diagnose from that.', 'crop-doctor');
+  }
+
+  loading = false;
+  document.getElementById('sendBtn').disabled = false;
+}
+</script>
+</body>
+</html>

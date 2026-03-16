@@ -1,0 +1,154 @@
+[
+  {
+    "id": "mln-001",
+    "name": "Maize Lethal Necrosis (MLN)",
+    "scientific_name": "MCMV + SCMV co-infection",
+    "crop_affected": ["maize", "corn"],
+    "severity": "CRITICAL",
+    "regions": ["Kenya", "Tanzania", "Ethiopia", "Uganda", "DR Congo"],
+    "symptoms": {
+      "early": "Yellowing from leaf tips inward, pale green to yellow streaking along leaf veins",
+      "middle": "Brown necrotic patches on leaves, starting at tips, spreading inward",
+      "late": "Complete plant chlorosis, premature death, rotting ears with poor grain fill",
+      "diagnostic_feature": "Yellowing always starts at LEAF TIPS and progresses INWARD toward midrib — distinguishes from nutrient deficiencies"
+    },
+    "cause": "Co-infection of Maize Chlorotic Mottle Virus (MCMV) with Sugarcane Mosaic Virus (SCMV) or Wheat Streak Mosaic Virus",
+    "vectors": ["Western flower thrips (Frankliniella occidentalis)", "Aphids", "Rootworms", "Beetles", "Infected seed"],
+    "spread": "Highly contagious. Wind, rain splash, insects, contaminated tools, infected seed",
+    "treatment": {
+      "chemical": "NO CURE. Remove and destroy all infected plants immediately.",
+      "steps": [
+        "1. Uproot infected plants carefully — bag and destroy by burning or deep burial (1m+)",
+        "2. Do NOT compost infected material",
+        "3. Control insect vectors immediately: apply Lambda-cyhalothrin or Imidacloprid",
+        "4. Clean all tools with bleach solution (10%) before moving to healthy sections",
+        "5. Plant tolerant/resistant varieties after a 2-month break"
+      ],
+      "urgency": "ACT TODAY — notify extension officer immediately"
+    },
+    "prevention": [
+      "Plant MLN-tolerant varieties (SEEDCO SC403, H614D, WEMA MLN-tolerant lines)",
+      "Use certified disease-free seed from accredited dealers",
+      "Control thrip and aphid populations from emergence",
+      "Avoid movement of plant material from affected to clean fields",
+      "Rotate to non-host crops (beans, vegetables) for at least 1 season"
+    ],
+    "reporting": "MANDATORY — notifiable disease in Kenya, Tanzania, Uganda. Contact local Agriculture Extension Officer or Ministry of Agriculture.",
+    "look_alikes": ["Maize streak virus (MSV)", "Nitrogen deficiency", "Iron deficiency"],
+    "distinguish_from_nitrogen_deficiency": "MLN yellowing starts from LEAF TIPS (apex). Nitrogen deficiency starts from LOWER LEAVES on older plants and V-shapes up the midrib."
+  },
+  {
+    "id": "faw-001",
+    "name": "Fall Armyworm (FAW)",
+    "scientific_name": "Spodoptera frugiperda",
+    "crop_affected": ["maize", "corn", "sorghum", "wheat", "millet", "rice", "sunflower"],
+    "severity": "CRITICAL",
+    "regions": ["Pan-African", "South Asia", "Caribbean", "Americas"],
+    "symptoms": {
+      "early": "'Windowpane' feeding on young leaves — transparent patches where leaf tissue is eaten but leaf 'skin' remains",
+      "middle": "Ragged, irregular holes in leaves; caterpillar visible in whorl (curled young leaves) with dark frass (excrement)",
+      "late": "Destroyed whorls, dead heart symptom, ear damage in older plants",
+      "diagnostic_feature": "Look for: caterpillar has distinctive INVERTED Y on head capsule; 4 dots in square on second-to-last body segment"
+    },
+    "cause": "Spodoptera frugiperda moth larvae. Moth is nocturnal, larvae active at night.",
+    "vectors": ["Wind-borne adult moths — can travel 100km per night"],
+    "spread": "Rapid. One female lays 1,500+ eggs. Three generations per season possible.",
+    "treatment": {
+      "chemical": "Emamectin benzoate (0.2% EC) — most effective. Or Chlorpyrifos, Spinetoram.",
+      "biological": "Bacillus thuringiensis var. kurstaki (Bt) — effective on young (1st-3rd instar) caterpillars only",
+      "application": "SPRAY INTO THE WHORL — caterpillars hide inside. Morning or evening application preferred.",
+      "steps": [
+        "1. Scout EVERY field every 3-4 days from emergence",
+        "2. Action threshold: 20%+ of plants with fresh damage",
+        "3. Mix emamectin benzoate at 20ml per 20L water; spray 5mL directly into whorl per plant",
+        "4. Wear full PPE: gloves, mask, goggles, long sleeves",
+        "5. Spray in the early morning or evening — avoid midday heat",
+        "6. Repeat after 7-10 days if damage continues"
+      ],
+      "urgency": "ACT THIS WEEK — populations double every few days"
+    },
+    "prevention": [
+      "Push-pull intercropping: plant Desmodium between maize rows, Napier grass as border",
+      "Early planting to escape peak moth flight periods",
+      "Egg mass scouting from V1 stage — crush egg masses by hand",
+      "Pheromone traps for monitoring adult populations",
+      "Encourage natural enemies: birds, parasitic wasps, ground beetles"
+    ],
+    "reporting": "Report to extension officer — widespread monitoring helps track spread across regions",
+    "organic_options": [
+      "Neem-based products (azadirachtin) — moderate effectiveness",
+      "Bt kurstaki — effective on small larvae only",
+      "Wood ash in whorl — deterrent effect, low cost"
+    ]
+  },
+  {
+    "id": "bean-rust-001",
+    "name": "Bean Rust",
+    "scientific_name": "Uromyces appendiculatus",
+    "crop_affected": ["beans", "common beans", "French beans", "climbing beans"],
+    "severity": "MODERATE",
+    "regions": ["East Africa", "Central Africa", "South America", "Europe"],
+    "symptoms": {
+      "early": "Small pale yellow spots on upper leaf surface; corresponding small tan/brown lesions on underside",
+      "middle": "Rust-colored (red-brown) powdery pustules on leaf undersides; pale yellow halos on upper surface",
+      "late": "Leaves turn brown and drop prematurely; severe defoliation; pod spots in heavy infections",
+      "diagnostic_feature": "Rust-colored pustules that release orange/brown powder when rubbed — the 'rust' color gives the disease its name"
+    },
+    "cause": "Fungal pathogen Uromyces appendiculatus. Favoured by warm days, cool nights, high humidity.",
+    "vectors": ["Wind", "Rain splash", "Infected plant debris in soil"],
+    "treatment": {
+      "chemical": "Mancozeb (0.2%) or copper-based fungicide. Tebuconazole for severe infections.",
+      "steps": [
+        "1. Begin fungicide spray at first sign of rust pustules",
+        "2. Mix mancozeb at 40g per 20L water",
+        "3. Spray both upper and LOWER leaf surfaces thoroughly",
+        "4. Repeat every 10-14 days while symptoms persist",
+        "5. Remove and destroy heavily infected plant material"
+      ],
+      "urgency": "ACT THIS WEEK — rust spreads rapidly in humid conditions"
+    },
+    "prevention": [
+      "Plant rust-resistant varieties where available",
+      "Ensure good plant spacing (30cm apart) for airflow",
+      "Avoid overhead irrigation — wet leaves promote spore germination",
+      "Remove crop debris after harvest — destroys overwintering spores",
+      "Rotate with non-legume crops for 1-2 seasons"
+    ],
+    "cost_estimate_kenya": "Mancozeb 200g pack: KES 80-120. Treat 0.25 acre per pack."
+  },
+  {
+    "id": "nitrogen-deficiency-001",
+    "name": "Nitrogen Deficiency",
+    "scientific_name": "N/A — Nutrient deficiency",
+    "crop_affected": ["maize", "wheat", "rice", "sorghum", "vegetables"],
+    "severity": "HIGH — causes 20-40% yield loss if untreated",
+    "regions": ["Global — most common on sandy or degraded soils"],
+    "symptoms": {
+      "early": "Lower (older) leaves turn pale green or yellow-green",
+      "middle": "Characteristic 'V' shape yellowing starting from leaf tip, progressing along midrib toward the stalk",
+      "late": "Upper leaves turn yellow; stunted plant growth; thin, spindly stalks; poor grain filling",
+      "diagnostic_feature": "STARTS ON LOWER/OLDER LEAVES and moves upward — opposite of MLN. The V-shaped yellowing along the midrib from leaf tip is the classic signature."
+    },
+    "cause": "Insufficient nitrogen in soil. Caused by: insufficient fertiliser, waterlogged soils reducing N uptake, sandy soils with rapid leaching, high soil pH (above 7.5) blocking uptake.",
+    "treatment": {
+      "immediate": "Top-dress with CAN (Calcium Ammonium Nitrate, 26% N) as soon as possible",
+      "steps": [
+        "1. Apply CAN at 50kg per acre (one bag) when soil is MOIST — never on dry soil",
+        "2. Apply in a ring around the plant 10cm from the stalk — not directly touching the stem",
+        "3. Water if possible after application",
+        "4. Organic option: 20L of diluted cattle urine (1:10 with water) applied around root zone",
+        "5. Results visible in 7-10 days"
+      ],
+      "urgency": "ACT THIS WEEK — yield loss accumulates daily during vegetative growth"
+    },
+    "prevention": [
+      "Apply basal fertiliser (DAP) at planting",
+      "Top-dress with CAN at V4-V6 stage (knee-high)",
+      "Incorporate organic matter/manure before planting",
+      "Maintain soil pH 5.5-6.5 for optimal nitrogen uptake",
+      "Avoid waterlogging — improves root nitrogen absorption"
+    ],
+    "distinguish_from_mln": "Nitrogen deficiency starts from OLD leaves (bottom of plant) and V-shapes up the midrib from tip. MLN starts from LEAF TIPS and streaks inward. Different field pattern too: N deficiency is uniform across field; MLN appears in scattered patches.",
+    "cost_estimate_kenya": "1 bag CAN (50kg): KES 3,800-4,400. Enough for 1 acre top-dressing."
+  }
+]

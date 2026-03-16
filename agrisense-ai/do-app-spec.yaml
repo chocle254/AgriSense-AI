@@ -1,0 +1,111 @@
+# DigitalOcean App Platform — AgriSense AI
+# Deploy with: doctl apps create --spec do-app-spec.yaml
+
+name: agrisense-ai
+region: nyc
+
+services:
+  # FastAPI Backend
+  - name: backend
+    source_dir: backend
+    github:
+      repo: yourusername/agrisense-ai
+      branch: main
+      deploy_on_push: true
+    run_command: uvicorn api.main:app --host 0.0.0.0 --port 8080
+    environment_slug: python
+    instance_count: 2
+    instance_size_slug: professional-xs
+    http_port: 8080
+    health_check:
+      http_path: /health
+      initial_delay_seconds: 30
+      period_seconds: 30
+    envs:
+      - key: DIGITALOCEAN_API_TOKEN
+        scope: RUN_TIME
+        type: SECRET
+      - key: CROP_DISEASES_KB_ID
+        scope: RUN_TIME
+        type: SECRET
+      - key: AGRONOMY_KB_ID
+        scope: RUN_TIME
+        type: SECRET
+      - key: SUPPLIER_KB_ID
+        scope: RUN_TIME
+        type: SECRET
+      - key: CROP_DOCTOR_AGENT_ID
+        scope: RUN_TIME
+        type: SECRET
+      - key: WEATHER_AGENT_ID
+        scope: RUN_TIME
+        type: SECRET
+      - key: MARKET_AGENT_ID
+        scope: RUN_TIME
+        type: SECRET
+      - key: AGRONOMY_AGENT_ID
+        scope: RUN_TIME
+        type: SECRET
+      - key: INPUT_FINDER_AGENT_ID
+        scope: RUN_TIME
+        type: SECRET
+      - key: OPENWEATHER_API_KEY
+        scope: RUN_TIME
+        type: SECRET
+      - key: AFRICASTALKING_API_KEY
+        scope: RUN_TIME
+        type: SECRET
+      - key: AT_USERNAME
+        scope: RUN_TIME
+        value: agrisense
+      - key: WHATSAPP_ACCESS_TOKEN
+        scope: RUN_TIME
+        type: SECRET
+      - key: WHATSAPP_PHONE_ID
+        scope: RUN_TIME
+        type: SECRET
+      - key: WHATSAPP_VERIFY_TOKEN
+        scope: RUN_TIME
+        value: agrisense-verify-2024
+
+  # React Frontend
+  - name: frontend
+    source_dir: frontend
+    github:
+      repo: yourusername/agrisense-ai
+      branch: main
+      deploy_on_push: true
+    build_command: npm install && npm run build
+    environment_slug: node-js
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    http_port: 8080
+    routes:
+      - path: /
+    envs:
+      - key: VITE_API_URL
+        scope: BUILD_TIME
+        value: ""   # Empty = same origin (backend routes /api)
+
+ingress:
+  rules:
+    - component:
+        name: frontend
+      match:
+        path:
+          prefix: /
+    - component:
+        name: backend
+      match:
+        path:
+          prefix: /api
+    - component:
+        name: backend
+      match:
+        path:
+          prefix: /webhooks
+    - component:
+        name: backend
+      match:
+        path:
+          prefix: /health
