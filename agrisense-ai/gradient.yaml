@@ -1,0 +1,74 @@
+# AgriSense AI — Gradient ADK Agent Configuration
+# DigitalOcean Gradient™ AI Agent Development Kit
+# Deploy with: gradient agent deploy
+
+name: agrisense-ai
+description: "Multi-agent precision agriculture platform for smallholder farmers"
+version: "1.0.0"
+
+# Primary entry point
+entry_point: backend/agents/orchestrator.py
+function: build_orchestrator_agent
+
+# Runtime configuration
+runtime:
+  python_version: "3.11"
+  requirements: backend/requirements.txt
+
+# Environment variables (set secrets via: gradient agent configure)
+env:
+  DIGITALOCEAN_API_TOKEN: "${DIGITALOCEAN_API_TOKEN}"
+  CROP_DISEASES_KB_ID: "${CROP_DISEASES_KB_ID}"
+  AGRONOMY_KB_ID: "${AGRONOMY_KB_ID}"
+  SUPPLIER_KB_ID: "${SUPPLIER_KB_ID}"
+  CROP_DOCTOR_AGENT_ID: "${CROP_DOCTOR_AGENT_ID}"
+  WEATHER_AGENT_ID: "${WEATHER_AGENT_ID}"
+  MARKET_AGENT_ID: "${MARKET_AGENT_ID}"
+  AGRONOMY_AGENT_ID: "${AGRONOMY_AGENT_ID}"
+  INPUT_FINDER_AGENT_ID: "${INPUT_FINDER_AGENT_ID}"
+  OPENWEATHER_API_KEY: "${OPENWEATHER_API_KEY}"
+
+# Observability
+tracing:
+  enabled: true
+  store_inputs: true
+  store_outputs: true
+  retention_days: 90
+
+# Agent evaluations (run automatically on deploy)
+evaluations:
+  auto_run: true
+  datasets:
+    - file: evals/crop_disease_dataset.csv
+      name: "Crop disease diagnosis accuracy"
+      categories:
+        - correctness
+        - context_quality
+        - safety_and_security
+      success_threshold: 85.0
+    
+    - file: evals/market_query_dataset.csv
+      name: "Market price query quality"
+      categories:
+        - correctness
+        - relevance
+      success_threshold: 80.0
+    
+    - file: evals/multilingual_dataset.csv
+      name: "Multilingual response quality"
+      categories:
+        - correctness
+        - context_quality
+      success_threshold: 80.0
+
+# Health check
+health_check:
+  path: /health
+  interval: 30s
+  timeout: 10s
+
+# Scaling (DigitalOcean App Platform)
+scaling:
+  min_instances: 1
+  max_instances: 10
+  target_cpu_utilization: 70
